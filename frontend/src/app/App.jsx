@@ -1,8 +1,14 @@
 import React from 'react'
+import {RouterProvider} from "react-router"
+import { routes } from './app.route'
+
+
 
 const App = () => {
   return (
-    <div className='bg-red-500'>App</div>
+     <>
+      <RouterProvider router = {routes} />
+     </>
   )
 }
 
