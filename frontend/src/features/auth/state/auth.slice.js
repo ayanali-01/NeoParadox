@@ -11,13 +11,13 @@ const authslice = createSlice({
 
     reducers:{
         setuser:(state,action) =>{
-            user.state = action.payload
+            state.user = action.payload
         },
         setloading:(state,action) =>{
-            user.state = action.payload
+            state.loading = action.payload
         },
         seterror:(state,action) =>{
-            user.state = action.payload
+            state.error = action.payload
         }
     }
 })

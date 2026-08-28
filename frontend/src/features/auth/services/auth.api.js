@@ -8,7 +8,7 @@ const authapi = axios.create({
 
 
 
-export async function  register({email,fullname,contact,password}){
+export async function register({email,fullname,contact,password}){
 
         const response = await authapi.post("/register",{
             email,fullname,contact,password
@@ -16,6 +16,15 @@ export async function  register({email,fullname,contact,password}){
 
         return response.data
 
+}
+
+export async function login({ email, password }) {
+    const response = await authapi.post("/login", {
+        email,
+        password
+    })
+
+    return response.data
 }
 
 

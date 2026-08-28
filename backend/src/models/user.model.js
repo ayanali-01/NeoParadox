@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import bcrypt from  "bcrypt"
 
 
 const userSchema = new mongoose.Schema({
@@ -16,9 +17,9 @@ const userSchema = new mongoose.Schema({
 userSchema.pre("save", async function(){
     if(!this.isModified("password")) 
         return
-    const hash = bcrypt.hash(this.password,10)
-    this.password = hash  
-}) 
+    const hash = await bcrypt.hash(this.password, 10)
+    this.password = hash
+})
 
 userSchema.methods.comparepassword = async function(){
     return bcrypt.compare(password,this.password)
