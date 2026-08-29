@@ -346,6 +346,9 @@ const Register = () => {
           <button
             id="google-signup"
             type="button"
+            onClick={() => {
+              window.location.href = "http://localhost:3000/api/auth/google"
+            }}
             className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm transition-all duration-300"
             style={{
               border: '1px solid rgba(255,255,255,0.1)',

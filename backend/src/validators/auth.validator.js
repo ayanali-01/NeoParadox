@@ -28,3 +28,13 @@ export const validateregisteruser = [
 
      validateRequest
 ]
+
+export const validateloginuser = [
+     body("email")
+     .isEmail().withMessage("invalid email format"),
+    
+     body("password")
+     .isLength({min:6}).withMessage("password must contain 6 character"),
+
+     validateRequest
+]

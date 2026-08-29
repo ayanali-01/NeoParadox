@@ -65,3 +65,56 @@ export async function registeruser(req,res){
 
 
 }
+
+
+
+export async function loginuser(req,res) {
+
+        const {email,password} = req.body
+
+
+        try{
+                const user = await usermodel.findOne({email})
+
+                if(!user){
+                        return res.status(400).json({
+                                meesage:"user not found"
+                        })
+                }
+
+                const ispasswordvalid = await user.comparepassword(password)
+
+                if(!ispasswordvalid){
+                        return res.status(400).json({
+                                meesage:"invalid password"
+                        })
+                }
+
+                await sendtokenresponse(user,res,"user logged in succesfully")
+
+        }
+        catch(error){
+                console.log(error)
+                return res.status(500).json({
+                        meesage:"server error"
+                })
+        }
+}
+
+
+export async function googlecallback(req,res){
+        
+        const user = await usermodel.findOne({email:req.body.email})
+
+        if(!user){
+                return res.status(400).json({
+                        meesage:"user not found"
+                })
+        }
+
+        await sendtokenresponse(user,res,"user logged in succesfully")
+
+        res.redirect("http://localhost:5173")
+
+
+}       

@@ -3,9 +3,11 @@ import { useAuth } from '../hook/useAuth.js'
 import { useNavigate, Link } from 'react-router-dom'
 
 const Login = () => {
+
   const { handleLogin } = useAuth()
   const navigate = useNavigate()
 
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,6 +21,7 @@ const Login = () => {
   }
 
   const handleSubmit = async (e) => {
+   
     e.preventDefault()
 
     const user = await handleLogin({
@@ -240,6 +243,9 @@ const Login = () => {
           <button
             id="google-signin"
             type="button"
+            onClick={() => {
+              window.location.href = "http://localhost:3000/api/auth/google"
+            }}
             className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm transition-all duration-300"
             style={{
               border: '1px solid rgba(255,255,255,0.1)',
