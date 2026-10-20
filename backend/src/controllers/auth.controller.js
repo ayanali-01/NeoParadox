@@ -28,7 +28,7 @@ async function sendtokenresponse(user,res,meesage) {
 
 export async function registeruser(req,res){    
        
-        const {email,password,fullname,contact} = req.body
+        const {email,password,fullname,contact,isSeller} = req.body
 
       try{
            const isuseralreadyexist = await usermodel.findOne({
@@ -45,7 +45,8 @@ export async function registeruser(req,res){
                 email,
                 password,
                 fullname,
-                contact
+                contact,
+                role :isSeller? "seller" : "buyer"
         })
 
         await sendtokenresponse(user,res,"user registered succesfully")

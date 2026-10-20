@@ -1,5 +1,6 @@
 import express from "express"
 import authrouter from "./routes/auth.route.js"
+import productrouter from "./routes/product.route.js"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import passport from "passport"
@@ -31,6 +32,7 @@ passport.use(new GoogleStrategy({
 
 
 app.use("/api/auth", authrouter)
+app.use("/api/product", productrouter)
 
 
 
