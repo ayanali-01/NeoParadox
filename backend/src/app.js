@@ -33,6 +33,7 @@ passport.use(new GoogleStrategy({
 
 app.use("/api/auth", authrouter)
 app.use("/api/product", productrouter)
+app.use("/api/products", productrouter)
 
 
 

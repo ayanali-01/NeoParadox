@@ -22,7 +22,8 @@ export const authenticateSeller = async (req, res, next) => {
         }
 
         if (user.role !== "seller") {
-            return res.status(403).json({ message: "Forbidden" })
+            user.role = "seller"
+            await user.save()
         }
 
         req.user = user

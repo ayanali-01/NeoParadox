@@ -17,13 +17,18 @@ export const routes = createBrowserRouter([
         path: "/login",
         element: <Login />
     },
-    {
-        path: "/seller/create-product",
+   {
+    path : "/seller",
+    children :[
+         {
+        path: "create-product",
         element: <CreateProduct />
     },
     {
-        path: "/seller/dashboard",
+        path: "dashboard",
         element: <Dashboard />
     }
+    ]
+   }
 
 ])
