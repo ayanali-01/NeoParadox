@@ -1,5 +1,6 @@
 import productModel from "../models/product.model.js"
 import { uploadFile } from "../services/storage.service.js"
+import mongoose from "mongoose"
 
 
 
@@ -62,5 +63,31 @@ export async function getAllProducts(req, res) {
         message: "Products fetched successfully",
         success: true,
         products
+    })
+}
+
+export async function deleteSellerProduct(req, res) {
+    if (!mongoose.isValidObjectId(req.params.productId)) {
+        return res.status(404).json({
+            message: "Product not found",
+            success: false
+        })
+    }
+
+    const product = await productModel.findOneAndDelete({
+        _id: req.params.productId,
+        seller: req.user._id
+    })
+
+    if (!product) {
+        return res.status(404).json({
+            message: "Product not found",
+            success: false
+        })
+    }
+
+    return res.status(200).json({
+        message: "Product deleted successfully",
+        success: true
     })
 }

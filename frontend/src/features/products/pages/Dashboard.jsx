@@ -1,16 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useProduct } from '../hook/useProduct';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 const Dashboard = () => {
-    const { handleGetSellerProduct } = useProduct();
+    const { handleDeleteProduct, handleGetSellerProduct } = useProduct();
     const sellerProducts = useSelector(state => state.product?.sellerProducts || []);
     const navigate = useNavigate();
+    const [deletingProductId, setDeletingProductId] = useState(null);
+    const [deleteError, setDeleteError] = useState('');
 
     useEffect(() => {
         handleGetSellerProduct();
-    }, []);
+    }, [handleGetSellerProduct]);
+
+    const handleRemoveProduct = async (event, product) => {
+        event.stopPropagation();
+        const shouldDelete = window.confirm(`Remove "${product.title}" from your vault? This cannot be undone.`);
+        if (!shouldDelete) return;
+
+        setDeletingProductId(product._id);
+        setDeleteError('');
+        try {
+            await handleDeleteProduct(product._id);
+        } catch (error) {
+            console.error('Failed to delete product', error);
+            setDeleteError('We couldn’t remove this listing. Please try again.');
+        } finally {
+            setDeletingProductId(null);
+        }
+    };
 
     return (
         <>
@@ -79,6 +98,11 @@ const Dashboard = () => {
                     </div>
 
                     {/* ── Product Grid ── */}
+                    {deleteError && (
+                        <p role="alert" className="mb-6 border border-red-400/30 bg-red-400/5 px-4 py-3 text-sm text-red-300">
+                            {deleteError}
+                        </p>
+                    )}
                     {sellerProducts && sellerProducts.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16 pb-24">
                             {sellerProducts.map(product => {
@@ -124,6 +148,15 @@ const Dashboard = () => {
                                                 >
                                                     {product.price?.currency} {product.price?.amount?.toLocaleString()}
                                                 </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={event => handleRemoveProduct(event, product)}
+                                                    disabled={deletingProductId === product._id}
+                                                    className="border border-red-400/30 px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-red-300 transition-colors hover:border-red-400/70 hover:bg-red-400/10 disabled:cursor-wait disabled:opacity-50"
+                                                    aria-label={`Remove ${product.title}`}
+                                                >
+                                                    {deletingProductId === product._id ? 'Removing…' : 'Remove'}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

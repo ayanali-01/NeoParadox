@@ -1,7 +1,7 @@
 import express from "express"
 import {authenticateSeller} from "../middleware/auth.middleware.js"
 import multer from "multer"
-import { createProduct , getSellerProducts,getAllProducts } from "../controllers/product.controller.js"
+import { createProduct, deleteSellerProduct, getSellerProducts, getAllProducts } from "../controllers/product.controller.js"
 
 
 
@@ -24,6 +24,7 @@ router.post("/", upload.array("images", 5), authenticateSeller, createProduct)
 
 router.get("/seller", authenticateSeller, getSellerProducts)
 
+router.delete("/:productId", authenticateSeller, deleteSellerProduct)
 
 router.get("/", getAllProducts)
 
