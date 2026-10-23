@@ -22,11 +22,9 @@ export const useProduct = () => {
         return data.products
     }
 
-
-
-    
-        
-    
+     
+   
+   
 
     return { handleCreateProduct,handleGetSellerProduct}
 

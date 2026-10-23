@@ -18,3 +18,5 @@ export async function getSellerProduct() {
     const response = await productApiInstance.get("/seller")
     return response.data
 }
+
+
