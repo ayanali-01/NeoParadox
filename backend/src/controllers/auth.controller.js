@@ -35,8 +35,11 @@ export async function registeruser(req,res){
         const {email,password,fullname,contact,isSeller} = req.body
 
       try{
+           const conditions = [{email}]
+           if (contact) conditions.push({contact})
+
            const isuseralreadyexist = await usermodel.findOne({
-                $or:[{email},{contact}]
+                $or: conditions
         })
 
         if(isuseralreadyexist){
@@ -54,12 +57,6 @@ export async function registeruser(req,res){
         })
 
         await sendtokenresponse(user,res,"user registered succesfully")
-
-        
-
-
-
-
 
       } catch(error){
         console.log(error)
@@ -108,24 +105,36 @@ export async function loginuser(req,res) {
 
 
 export async function googlecallback(req,res){
-        
-        const email = req.user?.emails?.[0]?.value
+        try {
+                const email = req.user?.emails?.[0]?.value
+                const fullname = req.user?.displayName || req.user?.name?.givenName || "User"
+                const googleId = req.user?.id
 
-        if(!email){
-                return res.status(400).json({
-                        meesage:"Google account did not provide an email address"
-                })
+                if(!email){
+                        return res.status(400).json({
+                                meesage:"Google account did not provide an email address"
+                        })
+                }
+
+                let user = await usermodel.findOne({email})
+
+                if(!user){
+                        user = await usermodel.create({
+                                email,
+                                fullname,
+                                googleId,
+                                role: "buyer"
+                        })
+                } else if (!user.googleId && googleId) {
+                        user.googleId = googleId
+                        await user.save()
+                }
+
+                res.cookie("token",createToken(user))
+                return res.redirect("http://localhost:5173")
+        } catch(error) {
+                console.log(error)
+                return res.redirect("http://localhost:5173/login?error=auth_failed")
         }
-
-        const user = await usermodel.findOne({email})
-
-        if(!user){
-                return res.status(400).json({
-                        meesage:"user not found"
-                })
-        }
-
-        res.cookie("token",createToken(user))
-        return res.redirect("http://localhost:5173")
 
 }       
