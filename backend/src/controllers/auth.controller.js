@@ -4,11 +4,7 @@ import { Config } from "../config/config.js";
 
 async function sendtokenresponse(user,res,meesage) {
         
-        const token = jwt.sign({
-                id: user._id
-        },Config.JWT_SECRET,{
-                expiresIn:"7d"
-        })
+        const token = createToken(user)
 
         res.cookie("token",token)
 
@@ -23,6 +19,14 @@ async function sendtokenresponse(user,res,meesage) {
                 }
         })
 
+}
+
+function createToken(user) {
+        return jwt.sign({
+                id: user._id
+        },Config.JWT_SECRET,{
+                expiresIn:"7d"
+        })
 }
 
 
@@ -105,7 +109,15 @@ export async function loginuser(req,res) {
 
 export async function googlecallback(req,res){
         
-        const user = await usermodel.findOne({email:req.body.email})
+        const email = req.user?.emails?.[0]?.value
+
+        if(!email){
+                return res.status(400).json({
+                        meesage:"Google account did not provide an email address"
+                })
+        }
+
+        const user = await usermodel.findOne({email})
 
         if(!user){
                 return res.status(400).json({
@@ -113,9 +125,7 @@ export async function googlecallback(req,res){
                 })
         }
 
-        await sendtokenresponse(user,res,"user logged in succesfully")
-
-        res.redirect("http://localhost:5173")
-
+        res.cookie("token",createToken(user))
+        return res.redirect("http://localhost:5173")
 
 }       
