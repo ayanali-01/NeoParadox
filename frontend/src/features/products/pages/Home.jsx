@@ -79,10 +79,10 @@ const Home = () => {
                 data-theme={isDarkMode ? 'dark' : 'light'}
                 style={{ fontFamily: "'Inter', sans-serif" }}
             >
-                <header className="border-b border-[#24251f]/15">
+                <header>
                     <nav className="flex w-full items-center justify-between px-5 py-5 sm:px-8 lg:px-14" aria-label="Main navigation">
-                        <Link to="/" className="font-serif text-2xl tracking-[0.18em] text-[#24251f] sm:text-3xl">
-                            N<span className="text-[#9b8050]">/</span>P
+                        <Link to="/" className="font-serif text-xl tracking-[0.08em] text-[#24251f] sm:text-2xl">
+                            neo <span className="italic text-[#9b8050]">paradox</span>
                         </Link>
                         <div className="flex items-center gap-4 sm:gap-8">
                             <a href="#collection" className="text-xs uppercase tracking-[0.14em] text-[#69685f] transition-colors hover:text-[#24251f] sm:text-sm sm:tracking-[0.18em]">
@@ -119,28 +119,39 @@ const Home = () => {
                     </nav>
                 </header>
 
-                <section className="relative flex min-h-[390px] w-full items-center overflow-hidden border-b border-[#24251f]/10 px-5 py-16 sm:min-h-[480px] sm:px-8 lg:min-h-[540px] lg:px-14">
-                    <div aria-hidden="true" className="pointer-events-none absolute -right-16 top-1/2 h-[22rem] w-[22rem] -translate-y-1/2 rounded-full border border-[#9b8050]/20 sm:right-10 sm:h-[34rem] sm:w-[34rem]">
-                        <div className="absolute inset-8 rounded-full border border-[#9b8050]/15 sm:inset-14" />
-                    </div>
-                    <div className="relative max-w-5xl">
-                        <p className="mb-6 text-xs font-medium uppercase tracking-[0.24em] text-[#80683c] sm:text-sm sm:tracking-[0.3em]">
-                            Independent makers · considered finds
-                        </p>
-                        <h1 className="max-w-5xl font-serif text-5xl font-light leading-[0.98] tracking-[-0.035em] text-[#24251f] sm:text-7xl md:text-8xl lg:text-[8.5rem]">
-                            Good things,<br className="sm:hidden" /> made to <span className="italic text-[#8b6e38]">be found.</span>
-                        </h1>
-                        <p className="mt-7 max-w-xl text-base leading-7 text-[#69685f] sm:text-lg sm:leading-8">
-                            Shop a growing collection of original pieces from independent sellers.
-                        </p>
-                        <a href="#collection" className="mt-8 inline-flex min-h-12 items-center gap-4 border-b border-[#8b6e38]/60 pb-2 text-sm font-medium uppercase tracking-[0.16em] text-[#4c493d] transition-colors hover:text-[#8b6e38] sm:text-base">
-                            Explore the collection <span aria-hidden="true">↓</span>
-                        </a>
+                <section className="px-3 pb-4 sm:px-6 lg:px-10">
+                    <div className="mx-auto grid min-h-[620px] max-w-[1600px] overflow-hidden bg-[#eee9e5] sm:min-h-[700px] lg:grid-cols-[1fr_0.92fr]">
+                        <div className="flex flex-col items-start justify-center px-7 py-14 sm:px-12 sm:py-16 lg:px-16 xl:px-24">
+                            <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-[#80683c] sm:text-xs">
+                                Independent fashion · curated finds
+                            </p>
+                            <h1 className="mt-8 font-serif text-[4.8rem] font-light leading-[0.78] tracking-[-0.065em] text-[#24251f] sm:text-8xl lg:text-[7.5rem] xl:text-[9rem]">
+                                neo<br />
+                                <span className="ml-7 inline-block pt-3 italic text-[#8b6e38] sm:ml-12 sm:pt-5">paradox</span>
+                            </h1>
+                            <p className="mt-9 max-w-xs text-sm leading-6 text-[#69685f] sm:text-base sm:leading-7">
+                                A marketplace for personal style and one-of-a-kind finds.
+                            </p>
+                            <a href="#collection" className="mt-8 inline-flex min-h-12 items-center gap-4 rounded-full bg-[#24251f] px-6 text-[10px] font-medium uppercase tracking-[0.18em] text-[#f5f2eb] transition-colors hover:bg-[#70582f] sm:text-xs">
+                                Discover the collection <span aria-hidden="true">↘</span>
+                            </a>
+                        </div>
+                        <div className="relative min-h-[420px] overflow-hidden bg-[#d9d4cf] sm:min-h-[540px] lg:min-h-full">
+                            <img
+                                src="/neo-paradox-editorial.jfif"
+                                alt="Model in a relaxed streetwear look, captured in the city"
+                                fetchPriority="high"
+                                className="absolute inset-0 h-full w-full object-cover object-center"
+                            />
+                            <p className="absolute bottom-5 right-5 text-[9px] uppercase tracking-[0.2em] text-white/80 drop-shadow sm:bottom-7 sm:right-7">
+                                Neo Paradox · Edit 01
+                            </p>
+                        </div>
                     </div>
                 </section>
 
                 <section id="collection" className="w-full scroll-mt-8 px-5 pb-20 pt-12 sm:px-8 sm:pb-28 sm:pt-16 lg:px-14">
-                    <div className="mb-8 flex flex-col justify-between gap-6 border-t border-[#24251f]/15 pt-7 sm:mb-10 sm:flex-row sm:items-end sm:pt-9">
+                    <div className="mb-8 flex flex-col justify-between gap-6 sm:mb-10 sm:flex-row sm:items-end">
                         <div>
                             <p className="mb-2 text-xs uppercase tracking-[0.2em] text-[#80683c] sm:text-sm sm:tracking-[0.25em]">The marketplace</p>
                             <h2 className="font-serif text-5xl font-light text-[#24251f] sm:text-6xl">The collection</h2>
@@ -148,7 +159,7 @@ const Home = () => {
                                 {isLoading ? 'Gathering the latest pieces…' : `${filteredProducts.length} ${filteredProducts.length === 1 ? 'piece' : 'pieces'} to discover`}
                             </p>
                         </div>
-                        <label className="flex min-h-12 w-full items-center gap-3 border-b border-[#24251f]/25 pb-3 sm:max-w-sm">
+                        <label className="flex min-h-12 w-full items-center gap-3 rounded-full bg-[#24251f]/[0.04] px-4 sm:max-w-sm">
                             <svg aria-hidden="true" className="h-5 w-5 shrink-0 text-[#69685f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                                 <circle cx="11" cy="11" r="7" />
                                 <path d="m16 16 4 4" />
@@ -170,7 +181,7 @@ const Home = () => {
                             <button
                                 type="button"
                                 onClick={loadProducts}
-                                className="mt-5 min-h-12 border-b border-[#8b6e38]/60 pb-2 text-sm uppercase tracking-[0.18em] text-[#70582f] hover:text-[#24251f]"
+                                className="mt-5 min-h-12 rounded-full bg-[#24251f] px-6 text-sm uppercase tracking-[0.18em] text-[#f5f2eb] hover:bg-[#70582f]"
                             >
                                 Try again
                             </button>
@@ -203,7 +214,7 @@ const Home = () => {
                     )}
                 </section>
 
-                <footer className="border-t border-[#24251f]/15">
+                <footer>
                     <div className="flex w-full flex-col gap-2 px-5 py-7 text-xs uppercase tracking-[0.16em] text-[#69685f] sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:text-sm lg:px-14">
                         <span>NeoParadox</span>
                         <span>Discover pieces from independent sellers</span>

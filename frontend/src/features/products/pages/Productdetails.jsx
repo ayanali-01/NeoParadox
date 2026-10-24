@@ -126,10 +126,15 @@ const Productdetails = () => {
                                 </div>
                             </div>
 
-                            <Link to="/" className="mt-10 inline-flex min-h-14 w-full items-center justify-center gap-3 bg-[#24251f] px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#f5f2eb] transition-colors hover:bg-[#70582f] sm:w-fit sm:min-w-64">
-                                Continue exploring <span aria-hidden="true">↗</span>
-                            </Link>
-                            <p className="mt-4 text-xs leading-5 text-[#858278]">Browse the collection to discover more pieces from our sellers.</p>
+                            <div className="mt-10 flex w-full flex-col gap-3 sm:flex-row">
+                                <button type="button" className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 bg-[#24251f] px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#f5f2eb] transition-colors hover:bg-[#70582f]">
+                                    Add to cart
+                                </button>
+                                <button type="button" className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 border border-[#24251f]/25 px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#24251f] transition-colors hover:border-[#70582f] hover:text-[#70582f]">
+                                    Buy now <span aria-hidden="true">↗</span>
+                                </button>
+                            </div>
+                            <p className="mt-4 text-xs leading-5 text-[#858278]">Purchase options are coming soon.</p>
                         </section>
                     </div>
                 </div>
