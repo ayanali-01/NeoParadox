@@ -5,6 +5,8 @@ import mongoose from "mongoose"
 
 
 
+
+
 export async function createProduct(req, res) {
 
     const { title, description, priceAmount, priceCurrency } = req.body;
@@ -38,6 +40,7 @@ export async function createProduct(req, res) {
 }
 
 
+
 export async function  getSellerProducts(req,res){
 
     
@@ -56,6 +59,7 @@ export async function  getSellerProducts(req,res){
 }
 
 
+
 export async function getAllProducts(req, res) {
     const products = await productModel.find()
 
@@ -65,6 +69,8 @@ export async function getAllProducts(req, res) {
         products
     })
 }
+
+
 
 export async function deleteSellerProduct(req, res) {
     if (!mongoose.isValidObjectId(req.params.productId)) {
@@ -89,5 +95,27 @@ export async function deleteSellerProduct(req, res) {
     return res.status(200).json({
         message: "Product deleted successfully",
         success: true
+    })
+}
+
+
+
+
+export async function getProductDetails(req, res) {
+    const { id } = req.params;
+
+    const product = await productModel.findById(id)
+
+    if (!product) {
+        return res.status(404).json({
+            message: "Product not found",
+            success: false
+        })
+    }
+
+    return res.status(200).json({
+        message: "Product details fetched successfully",
+        success: true,
+        product
     })
 }

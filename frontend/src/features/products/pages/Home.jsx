@@ -7,7 +7,7 @@ const ProductCard = ({ product }) => {
     const image = product.images?.[0]?.url || '/auth-editorial.jpg'
 
     return (
-        <article className="group">
+        <Link to={`/product/${product._id}`} className="group block">
             <div className="relative aspect-[4/5] overflow-hidden bg-[#e9e4da]">
                 <img
                     src={image}
@@ -29,7 +29,7 @@ const ProductCard = ({ product }) => {
                     {product.price?.currency} {Number(product.price?.amount || 0).toLocaleString()}
                 </p>
             </div>
-        </article>
+        </Link>
     )
 }
 
