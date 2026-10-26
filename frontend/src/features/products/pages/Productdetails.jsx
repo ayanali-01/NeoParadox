@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
-import { useProduct } from '../hook/useProduct'
+import { useProduct } from '../hook/useProduct.js'
+import { useCart } from '../../cart/hook/useCart.js'
 
 const formatPrice = price => {
     const amount = Number(price?.amount)
@@ -11,10 +12,31 @@ const Productdetails = () => {
     const { productId } = useParams()
     const navigate = useNavigate()
     const { handleGetProductById } = useProduct()
+    const { handleAddItem } = useCart()
     const [product, setProduct] = useState(null)
     const [selectedImage, setSelectedImage] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
+    const [isAdding, setIsAdding] = useState(false)
+    const [feedback, setFeedback] = useState(null)
+
+    const onAddToCart = async () => {
+        if (!product?._id || isAdding) return
+        setIsAdding(true)
+        setFeedback(null)
+        try {
+            await handleAddItem({ productId: product._id })
+            setFeedback({ type: 'success', message: 'Added to your cart' })
+            setTimeout(() => setFeedback(null), 3000)
+        } catch (addError) {
+            console.error('Failed to add item to cart', addError)
+            const msg = addError?.response?.data?.message || 'Failed to add item to cart. Please try again.'
+            setFeedback({ type: 'error', message: msg })
+            setTimeout(() => setFeedback(null), 3500)
+        } finally {
+            setIsAdding(false)
+        }
+    }
 
     useEffect(() => {
         let isCurrent = true
@@ -127,14 +149,30 @@ const Productdetails = () => {
                             </div>
 
                             <div className="mt-10 flex w-full flex-col gap-3 sm:flex-row">
-                                <button type="button" className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 bg-[#24251f] px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#f5f2eb] transition-colors hover:bg-[#70582f]">
-                                    Add to cart
+                                <button
+                                    type="button" 
+                                    onClick={onAddToCart}
+                                    disabled={isAdding}
+                                    className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 bg-[#24251f] px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#f5f2eb] transition-colors hover:bg-[#70582f] disabled:cursor-not-allowed disabled:opacity-60"
+                                >
+                                    {isAdding ? 'Adding to cart...' : feedback?.type === 'success' ? 'Added to cart ✓' : 'Add to cart'}
                                 </button>
-                                <button type="button" className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 border border-[#24251f]/25 px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#24251f] transition-colors hover:border-[#70582f] hover:text-[#70582f]">
+                                <button
+                                    type="button"
+                                    onClick={onAddToCart}
+                                    disabled={isAdding}
+                                    className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 border border-[#24251f]/25 px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#24251f] transition-colors hover:border-[#70582f] hover:text-[#70582f] disabled:cursor-not-allowed disabled:opacity-60"
+                                >
                                     Buy now <span aria-hidden="true">↗</span>
                                 </button>
                             </div>
-                            <p className="mt-4 text-xs leading-5 text-[#858278]">Purchase options are coming soon.</p>
+                            {feedback ? (
+                                <p className={`mt-4 text-xs leading-5 transition-opacity ${feedback.type === 'error' ? 'text-red-700 font-medium' : 'text-[#80683c]'}`}>
+                                    {feedback.message}
+                                </p>
+                            ) : (
+                                <p className="mt-4 text-xs leading-5 text-[#858278]">Thoughtfully packaged and insured for delivery.</p>
+                            )}
                         </section>
                     </div>
                 </div>
