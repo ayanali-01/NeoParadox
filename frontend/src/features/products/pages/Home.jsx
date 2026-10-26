@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useProduct } from '../hook/useProduct'
+import CartNavButton from '../../cart/components/CartNavButton'
 
 const ProductCard = ({ product }) => {
     const image = product.images?.[0]?.url || '/auth-editorial.jpg'
@@ -96,6 +97,7 @@ const Home = () => {
                             <span className="hidden text-sm text-[#69685f] md:block">
                                 {user?.fullname || 'Welcome'}
                             </span>
+                            <CartNavButton />
                             <button
                                 type="button"
                                 onClick={() => setIsDarkMode(current => !current)}

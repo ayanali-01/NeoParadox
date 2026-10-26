@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useProduct } from '../hook/useProduct.js'
 import { useCart } from '../../cart/hook/useCart.js'
+import CartNavButton from '../../cart/components/CartNavButton.jsx'
 
 const formatPrice = price => {
     const amount = Number(price?.amount)
@@ -96,9 +97,12 @@ const Productdetails = () => {
                 <header className="border-b border-[#24251f]/15">
                     <nav className="flex items-center justify-between px-5 py-5 sm:px-8 lg:px-14" aria-label="Product navigation">
                         <Link to="/" className="font-serif text-2xl tracking-[0.18em] sm:text-3xl">N<span className="text-[#9b8050]">/</span>P</Link>
-                        <Link to="/" className="inline-flex min-h-11 items-center gap-3 text-xs uppercase tracking-[0.14em] text-[#69685f] transition-colors hover:text-[#70582f] sm:text-sm sm:tracking-[0.18em]">
-                            <span aria-hidden="true">←</span> The collection
-                        </Link>
+                        <div className="flex items-center gap-4 sm:gap-6">
+                            <Link to="/" className="inline-flex min-h-11 items-center gap-3 text-xs uppercase tracking-[0.14em] text-[#69685f] transition-colors hover:text-[#70582f] sm:text-sm sm:tracking-[0.18em]">
+                                <span aria-hidden="true">←</span> The collection
+                            </Link>
+                            <CartNavButton />
+                        </div>
                     </nav>
                 </header>
 

@@ -120,6 +120,63 @@ export const incrementCartItemQuantity = async (req, res) => {
     }
 };
 
+export const decrementCartItemQuantity = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const cart = await cartModel.findOne({ user: req.user._id });
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found", success: false });
+        }
+
+        const item = cart.items.find(i => i.product.toString() === productId);
+        if (!item) {
+            return res.status(404).json({ message: "Item not in cart", success: false });
+        }
+
+        if (item.quantity <= 1) {
+            cart.items = cart.items.filter(i => i.product.toString() !== productId);
+        } else {
+            item.quantity -= 1;
+        }
+
+        await cart.save();
+        return res.status(200).json({
+            message: "Cart item decremented",
+            success: true,
+            cart
+        });
+    } catch (error) {
+        console.error("Error decrementing cart item:", error);
+        return res.status(500).json({
+            message: "Failed to decrement cart item",
+            success: false
+        });
+    }
+};
+
+export const removeCartItem = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const cart = await cartModel.findOneAndUpdate(
+            { user: req.user._id },
+            { $pull: { items: { product: productId } } },
+            { new: true }
+        );
+
+        return res.status(200).json({
+            message: "Item removed from cart",
+            success: true,
+            cart
+        });
+    } catch (error) {
+        console.error("Error removing cart item:", error);
+        return res.status(500).json({
+            message: "Failed to remove item from cart",
+            success: false
+        });
+    }
+};
+
 export const createOrderController = async (req, res) => {
     return res.status(501).json({
         message: "Order creation not implemented yet",
