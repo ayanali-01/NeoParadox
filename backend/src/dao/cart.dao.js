@@ -1,19 +1,14 @@
 import cartModel from "../models/cart.model.js";
 import mongoose from "mongoose";
 
-
-
-
 export async function getCartDetails(userId) {
-   
-   
-    let cart = (await cartModel.aggregate([
+    const cartData = await cartModel.aggregate([
         {
             $match: {
                 user: new mongoose.Types.ObjectId(userId)
             }
         },
-        { $unwind: { path: '$items' } },
+        { $unwind: { path: '$items', preserveNullAndEmptyArrays: true } },
         {
             $lookup: {
                 from: 'products',
@@ -22,45 +17,43 @@ export async function getCartDetails(userId) {
                 as: 'items.product'
             }
         },
-        { $unwind: { path: '$items.product' } },
-        {
-            $unwind: { path: '$items.product.variants' }
-        },
-        {
-            $match: {
-                $expr: {
-                    $eq: [
-                        '$items.variant',
-                        '$items.product.variants._id'
-                    ]
-                }
-            }
-        },
+        { $unwind: { path: '$items.product', preserveNullAndEmptyArrays: true } },
         {
             $addFields: {
                 itemPrice: {
-                    price: {
-                        $multiply: [
-                            '$items.quantity',
-                            '$items.product.variants.price.amount'
-                        ]
-                    },
-                    currency:
-                        '$items.product.variants.price.currency'
+                    $multiply: [
+                        { $ifNull: ['$items.quantity', 0] },
+                        { $ifNull: ['$items.product.price.amount', { $ifNull: ['$items.price.amount', 0] }] }
+                    ]
                 }
             }
         },
         {
             $group: {
                 _id: '$_id',
-                totalPrice: { $sum: '$itemPrice.price' },
+                totalPrice: { $sum: '$itemPrice' },
                 currency: {
-                    $first: '$itemPrice.currency'
+                    $first: {
+                        $ifNull: ['$items.product.price.currency', { $ifNull: ['$items.price.currency', 'INR'] }]
+                    }
                 },
-                items: { $push: '$items' }
+                items: {
+                    $push: {
+                        $cond: [
+                            { $ifNull: ['$items.product._id', false] },
+                            '$items',
+                            '$$REMOVE'
+                        ]
+                    }
+                }
             }
         }
-    ]))[ 0 ]
+    ]);
 
-    return cart
+    const cart = cartData[0];
+    if (!cart || !cart.items || cart.items.length === 0) {
+        return null;
+    }
+
+    return cart;
 }

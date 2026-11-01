@@ -1,5 +1,9 @@
+import mongoose from "mongoose";
 import cartModel from "../models/cart.model.js";
 import productModel from "../models/product.model.js";
+import { createOrder } from "../services/payment.service.js";
+import { getCartDetails } from "../dao/cart.dao.js";
+
 
 export const addToCart = async (req, res) => {
     try {
@@ -58,11 +62,61 @@ export const addToCart = async (req, res) => {
     }
 };
 
+
+
 export const getCart = async (req, res) => {
     try {
-        const cart = await cartModel.findOne({ user: req.user._id }).populate('items.product');
+        const cartData = await cartModel.aggregate([
+            {
+                $match: {
+                    user: new mongoose.Types.ObjectId(req.user._id)
+                }
+            },
+            { $unwind: { path: '$items', preserveNullAndEmptyArrays: true } },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'items.product',
+                    foreignField: '_id',
+                    as: 'items.product'
+                }
+            },
+            { $unwind: { path: '$items.product', preserveNullAndEmptyArrays: true } },
+            {
+                $addFields: {
+                    itemPrice: {
+                        $multiply: [
+                            { $ifNull: ['$items.quantity', 0] },
+                            { $ifNull: ['$items.product.price.amount', { $ifNull: ['$items.price.amount', 0] }] }
+                        ]
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    totalPrice: { $sum: '$itemPrice' },
+                    currency: {
+                        $first: {
+                            $ifNull: ['$items.product.price.currency', { $ifNull: ['$items.price.currency', 'INR'] }]
+                        }
+                    },
+                    items: {
+                        $push: {
+                            $cond: [
+                                { $ifNull: ['$items.product._id', false] },
+                                '$items',
+                                '$$REMOVE'
+                            ]
+                        }
+                    }
+                }
+            }
+        ]);
 
-        if (!cart) {
+        const cart = cartData[0];
+
+        if (!cart || !cart.items || cart.items.length === 0) {
             return res.status(200).json({
                 success: true,
                 cart: {
@@ -73,19 +127,13 @@ export const getCart = async (req, res) => {
             });
         }
 
-        const totalPrice = cart.items.reduce((total, item) => {
-            const amount = item.price?.amount || item.product?.price?.amount || 0;
-            return total + amount * (item.quantity || 1);
-        }, 0);
-
-        const currency = cart.items[0]?.price?.currency || cart.items[0]?.product?.price?.currency || "INR";
-
         return res.status(200).json({
             success: true,
             cart: {
-                ...cart.toObject(),
-                totalPrice,
-                currency
+                _id: cart._id,
+                items: cart.items,
+                totalPrice: cart.totalPrice,
+                currency: cart.currency || "INR"
             }
         });
     } catch (error) {
@@ -96,6 +144,8 @@ export const getCart = async (req, res) => {
         });
     }
 };
+
+
 
 export const incrementCartItemQuantity = async (req, res) => {
     try {
@@ -119,6 +169,8 @@ export const incrementCartItemQuantity = async (req, res) => {
         });
     }
 };
+
+
 
 export const decrementCartItemQuantity = async (req, res) => {
     try {
@@ -154,6 +206,8 @@ export const decrementCartItemQuantity = async (req, res) => {
     }
 };
 
+
+
 export const removeCartItem = async (req, res) => {
     try {
         const { productId } = req.params;
@@ -177,12 +231,36 @@ export const removeCartItem = async (req, res) => {
     }
 };
 
+
+
+
 export const createOrderController = async (req, res) => {
-    return res.status(501).json({
-        message: "Order creation not implemented yet",
-        success: false
-    });
+    try {
+        const cart = await getCartDetails(req.user._id);
+
+        if (!cart || !cart.items || cart.items.length === 0) {
+            return res.status(400).json({
+                message: "Cart is empty",
+                success: false
+            });
+        }
+
+        const order = await createOrder({ amount: cart.totalPrice, currency: cart.currency });
+
+        return res.status(200).json({
+            message: "Order created successfully",
+            success: true,
+            order
+        });
+    } catch (error) {
+        console.error("Error creating cart order:", error);
+        return res.status(500).json({
+            message: error.message || "Failed to create order",
+            success: false
+        });
+    }
 };
+
 
 export const verifyOrderController = async (req, res) => {
     return res.status(501).json({

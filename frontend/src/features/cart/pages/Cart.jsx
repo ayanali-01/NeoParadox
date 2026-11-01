@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useCart } from '../hook/useCart'
 import CartNavButton from '../components/CartNavButton'
+import  {useRazorpay} from "react-razorpay"
+
+
 
 const formatPrice = (amount, currency = 'INR') => {
     const num = Number(amount)
@@ -12,6 +15,8 @@ const formatPrice = (amount, currency = 'INR') => {
 const Cart = () => {
     const navigate = useNavigate()
     const user = useSelector(state => state.auth.user)
+    const { error: razorpayError, isLoading: isRazorpayLoading, Razorpay } = useRazorpay()
+    
     const {
         cartItems,
         cartCount,
@@ -22,7 +27,8 @@ const Cart = () => {
         handleIncrementCartItem,
         handleDecrementCartItem,
         handleRemoveCartItem,
-        handleCreateCartOrder
+        handleCreateCartOrder,
+        handleVerifyCartOrder
     } = useCart()
 
     const [isCheckingOut, setIsCheckingOut] = useState(false)
@@ -71,18 +77,60 @@ const Cart = () => {
         setActionMessage(null)
 
         try {
-            // Attempt order creation via cart API
-            await handleCreateCartOrder()
-            setActionMessage({ type: 'success', text: 'Order initiated successfully.' })
+            const order = await handleCreateCartOrder()
+            if (!order) {
+                throw new Error("Could not initialize checkout order.")
+            }
+
+            const options = {
+                key: "rzp_test_TurBsJHpZ1Ry6c",
+                amount: order.amount, // Amount in paise
+                currency: order.currency,
+                name: "Neo Paradox",
+                description: "Neo Paradox Order",
+                order_id: order.id,
+                handler: async (response) => {
+                    try {
+                        const isValid = await handleVerifyCartOrder(response)
+                        if (isValid) {
+                            navigate(`/order-success?order_id=${response?.razorpay_order_id}`)
+                        } else {
+                            setActionMessage({ type: 'error', text: 'Payment verification failed.' })
+                        }
+                    } catch (verifyErr) {
+                        console.error('Verification error:', verifyErr)
+                        setActionMessage({ type: 'error', text: 'Payment verification error.' })
+                    }
+                },
+                prefill: {
+                    name: user?.fullname || user?.name || '',
+                    email: user?.email || '',
+                    contact: user?.contact || '',
+                },
+                theme: {
+                    color: "#24251f",
+                },
+                modal: {
+                    ondismiss: () => {
+                        setIsCheckingOut(false)
+                    }
+                }
+            }
+
+            const razorpayInstance = new Razorpay(options)
+            razorpayInstance.open()
         } catch (err) {
             console.error('Checkout error:', err)
-            const msg = err?.response?.data?.message || 'Secure checkout is being prepared for this collection.'
-            setActionMessage({ type: 'info', text: msg })
+            const msg = err?.response?.data?.message || err?.message || 'Could not initiate checkout.'
+            setActionMessage({ type: 'error', text: msg })
         } finally {
             setIsCheckingOut(false)
-            setTimeout(() => setActionMessage(null), 5000)
         }
     }
+
+            
+       
+      
 
     return (
         <>
