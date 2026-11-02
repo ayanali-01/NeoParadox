@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_URL } from "../../../config/api.js"
 
 const productApiInstance = axios.create({
-    baseURL: "http://localhost:3000/api/product",
+    baseURL: `${API_URL}/api/product`,
     withCredentials: true,
 })
 
@@ -40,5 +41,4 @@ export async function getProductById(productId) {
     const response = await productApiInstance.get(`/detail/${productId}`)
     return response.data
 }
-
 

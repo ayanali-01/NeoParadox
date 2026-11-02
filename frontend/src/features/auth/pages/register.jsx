@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../hook/useAuth.js'
 import { useNavigate, Link } from 'react-router-dom'
+import { API_URL } from '../../../config/api.js'
 
 const Register = () => {
   const { handleRegister } = useAuth()
@@ -244,7 +245,7 @@ const Register = () => {
             <button
               type="button"
               onClick={() => {
-                window.location.href = "http://localhost:3000/api/auth/google"
+                window.location.href = `${API_URL}/api/auth/google`
               }}
               className="w-full flex items-center justify-center gap-3 py-3.5 bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white text-xs tracking-[0.18em] uppercase font-medium transition-colors duration-200"
             >

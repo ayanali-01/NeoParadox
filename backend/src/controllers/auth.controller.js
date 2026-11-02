@@ -131,10 +131,10 @@ export async function googlecallback(req,res){
                 }
 
                 res.cookie("token",createToken(user))
-                return res.redirect("http://localhost:5173")
+                return res.redirect(Config.FRONTEND_URL)
         } catch(error) {
                 console.log(error)
-                return res.redirect("http://localhost:5173/login?error=auth_failed")
+                return res.redirect(`${Config.FRONTEND_URL}/login?error=auth_failed`)
         }
 
 }   
