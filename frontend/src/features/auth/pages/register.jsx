@@ -69,7 +69,7 @@ const Register = () => {
         <div className="relative w-full lg:w-1/2 min-h-[460px] lg:min-h-screen overflow-hidden flex flex-col justify-between p-8 lg:p-14">
           {/* Background Image */}
           <img
-            src="/auth-editorial.jpg"
+            src="/pic2.jpg"
             alt="Editorial Fashion"
             className="absolute inset-0 w-full h-full object-cover object-top"
           />
@@ -83,14 +83,15 @@ const Register = () => {
           />
 
           {/* Brand Header overlay */}
-          <div className="relative z-10 flex items-center justify-between">
-            <span
-              className="text-xs font-medium tracking-[0.35em] uppercase text-[#c9a84c]"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
-            >
-              NeoParadox
-            </span>
-          </div>
+    <      div className="relative z-10 flex items-center justify-between">
+                     <Link
+                       to="/"
+                       className="text-2xl sm:text-3xl font-medium tracking-[0.12em] text-[#f5f2eb] drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] transition-opacity hover:opacity-90"
+                       style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                     >
+                       neo <span className="italic text-[#e5c97a]">paradox</span>
+                     </Link>
+                   </div>
 
           {/* Bottom Quote Thing */}
           <div className="relative z-10 mt-auto pt-16">
