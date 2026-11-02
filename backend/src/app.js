@@ -37,6 +37,10 @@ app.use("/api/product", productrouter)
 app.use("/api/products", productrouter)
 app.use("/api/cart", cartrouter)
 
+app.get("/", (req, res) => {
+  res.send("Backend is running successfully!");
+});
+
 
 
 
