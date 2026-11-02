@@ -14,6 +14,9 @@ backend origin so Google OAuth can build its callback URL. You can instead set
 `GOOGLE_CALLBACK_URL` to the full callback URL directly. These backend URLs
 default to their localhost origins for development.
 
+The frontend Vercel deployment includes a rewrite so direct navigation and
+refreshes on React Router paths serve the app entry point.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
