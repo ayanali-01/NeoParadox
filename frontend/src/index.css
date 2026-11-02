@@ -1,53 +1,102 @@
 @import "tailwindcss";
 
-main[data-theme="dark"] {
-    background-color: #141511;
-    color: #f3f0e8;
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+
+/* Grain texture utility for high-fashion brutalist editorial aesthetic */
+.grain-overlay {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 0);
+    background-size: 4px 4px;
+}
+
+[data-theme="dark"] .grain-overlay,
+.dark .grain-overlay {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 0);
+}
+
+/* ── Universal Global Dark Mode for ALL Pages ── */
+html.dark,
+html[data-theme="dark"],
+body.dark,
+[data-theme="dark"],
+.dark {
+    background-color: #0c0c0e !important;
+    color: #f4f4f5 !important;
     color-scheme: dark;
 }
 
-main[data-theme="dark"] header,
-main[data-theme="dark"] footer,
-main[data-theme="dark"] section {
-    border-color: rgb(243 240 232 / 14%);
+.dark main,
+[data-theme="dark"] main,
+.dark [class*="bg-[#f5f2eb]"],
+[data-theme="dark"] [class*="bg-[#f5f2eb]"] {
+    background-color: #0c0c0e !important;
+    color: #f4f4f5 !important;
 }
 
-main[data-theme="dark"] [class*="text-[#24251f]"] {
-    color: #f3f0e8;
+.dark header,
+.dark footer,
+.dark section,
+.dark article,
+.dark aside,
+[data-theme="dark"] header,
+[data-theme="dark"] footer,
+[data-theme="dark"] section {
+    border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
-main[data-theme="dark"] [class*="text-[#69685f]"],
-main[data-theme="dark"] [class*="text-[#4c493d]"] {
-    color: #c2bdb1;
+.dark [class*="text-[#24251f]"],
+[data-theme="dark"] [class*="text-[#24251f]"] {
+    color: #f4f4f5 !important;
 }
 
-main[data-theme="dark"] [class*="text-[#80683c]"],
-main[data-theme="dark"] [class*="text-[#8b6e38]"],
-main[data-theme="dark"] [class*="text-[#70582f]"] {
-    color: #d9bd78;
+.dark [class*="text-[#69685f]"],
+.dark [class*="text-[#4c493d]"],
+[data-theme="dark"] [class*="text-[#69685f]"],
+[data-theme="dark"] [class*="text-[#4c493d]"] {
+    color: #a1a1aa !important;
 }
 
-main[data-theme="dark"] [class*="bg-[#e9e4da]"],
-main[data-theme="dark"] [class*="bg-[#e7e2d8]"] {
-    background-color: #282923;
+.dark [class*="text-[#80683c]"],
+.dark [class*="text-[#8b6e38]"],
+.dark [class*="text-[#70582f]"],
+[data-theme="dark"] [class*="text-[#80683c]"],
+[data-theme="dark"] [class*="text-[#8b6e38]"],
+[data-theme="dark"] [class*="text-[#70582f]"] {
+    color: #d9bd78 !important;
 }
 
-main[data-theme="dark"] [class*="bg-[#ece8df]"] {
-    background-color: #22231e;
+.dark [class*="bg-[#eee9e5]"],
+[data-theme="dark"] [class*="bg-[#eee9e5]"] {
+    background-color: #17181c !important;
 }
 
-main[data-theme="dark"] [class*="border-[#24251f]"] {
-    border-color: rgb(243 240 232 / 20%);
+.dark [class*="bg-[#e9e4da]"],
+.dark [class*="bg-[#e7e2d8]"],
+[data-theme="dark"] [class*="bg-[#e9e4da]"],
+[data-theme="dark"] [class*="bg-[#e7e2d8]"] {
+    background-color: #222328 !important;
 }
 
-main[data-theme="dark"] input {
-    color: #f3f0e8;
+.dark [class*="bg-[#ece8df]"],
+[data-theme="dark"] [class*="bg-[#ece8df]"] {
+    background-color: #1a1b20 !important;
 }
 
-main[data-theme="dark"] input::placeholder {
-    color: #aaa69c;
+.dark [class*="border-[#24251f]"],
+[data-theme="dark"] [class*="border-[#24251f]"] {
+    border-color: rgba(255, 255, 255, 0.14) !important;
 }
 
-main[data-theme="dark"] button {
-    color: #e5dfd1;
+.dark input,
+[data-theme="dark"] input {
+    color: #f4f4f5 !important;
+}
+
+.dark input::placeholder,
+[data-theme="dark"] input::placeholder {
+    color: #71717a !important;
+}
+
+.dark button,
+[data-theme="dark"] button {
+    color: #f4f4f5;
 }

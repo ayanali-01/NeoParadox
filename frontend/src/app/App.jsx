@@ -12,6 +12,13 @@ const App = () => {
   const user = useSelector(state => state.auth.user)
 
   useEffect(() => {
+    // Initialize dark mode globally from localStorage on every page
+    const saved = window.localStorage.getItem('neoparadox-theme')
+    if (saved === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
     handleGetMe()
   }, [])
 
