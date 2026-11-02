@@ -2,6 +2,8 @@ import cartModel from "../models/cart.model.js";
 import mongoose from "mongoose";
 
 export async function getCartDetails(userId) {
+   
+   
     const cartData = await cartModel.aggregate([
         {
             $match: {
