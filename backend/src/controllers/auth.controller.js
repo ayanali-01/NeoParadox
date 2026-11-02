@@ -2,11 +2,18 @@ import usermodel from "../models/user.model.js";
 import jwt from "jsonwebtoken"
 import { Config } from "../config/config.js"; 
 
+const authCookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+}
+
 async function sendtokenresponse(user,res,meesage) {
         
         const token = createToken(user)
 
-        res.cookie("token",token)
+        res.cookie("token",token,authCookieOptions)
 
         res.status(200).json({
                 meesage,
@@ -130,7 +137,7 @@ export async function googlecallback(req,res){
                         await user.save()
                 }
 
-                res.cookie("token",createToken(user))
+                res.cookie("token",createToken(user),authCookieOptions)
                 return res.redirect(Config.FRONTEND_URL)
         } catch(error) {
                 console.log(error)
